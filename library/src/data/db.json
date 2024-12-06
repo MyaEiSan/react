@@ -1,0 +1,69 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "Eloquent javascript",
+      "description": "Best JS book",
+      "categories": [
+        "Javascript",
+        "Programming"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Laravel from scratch",
+      "description": "Best PHP framework book",
+      "categories": [
+        "PHP",
+        "Programming",
+        "Laravel"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "React Basic",
+      "description": "Best JS Library book",
+      "categories": [
+        "React",
+        "Programming",
+        "Javascript"
+      ]
+    },
+    {
+      "title": "Book one",
+      "description": "book description",
+      "categories": [
+        "CSS",
+        "HTML"
+      ],
+      "id": 4
+    },
+    {
+      "title": "Book Two",
+      "description": "book two description",
+      "categories": [
+        "React",
+        "Javascript "
+      ],
+      "id": 5
+    },
+    {
+      "title": "Book Three",
+      "description": "Book Three description",
+      "categories": [
+        "node js",
+        "vue js "
+      ],
+      "id": 6
+    },
+    {
+      "title": "title",
+      "description": "sdfvb",
+      "categories": [
+        "ds",
+        "sdvds"
+      ],
+      "id": 7
+    }
+  ]
+}

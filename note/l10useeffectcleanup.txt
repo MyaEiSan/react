@@ -1,0 +1,105 @@
+=>useEffect cleanup function 
+component တစ်ခုကို ဖျက်လိုက်တဲ့အချိန်မှာ component က ပျက်သွားပေမယ့် သူ့ထဲမှာ ရှိတဲ့ data fetch တဲ့ လုပ်ငန်းတွေက ပုံမှန်ဆိုရင် ဆက်ပြီးလုပ်နေပြီး state တွေကို change နေပါလိမ့်မယ် အဲလိုမဖြစ်ရင် memory release တွေဖြစ်တတ်ပါတယ်။ အဲဒါတွေမဖြစ်စေချင်ရင် component destroy ဖြစ်သွားတဲ့အချိန်မှာ fetch လုပ်တာကို ဆက်မလုပ်စေချင်ရင် abort လုပ်လို့ရပါတယ်။ 
+
+js က ပါတဲ့ abortControllr ကို သုံးပြီး useEffect က callback  ရဲ့နောက်ဆုံးမှာ abort function ကို return ပြန်ပေးရမယ်။ fetch လုပ်တဲ့အချိန်မှာလည်း singnal တစ်ခုလည်းပေးဖို့လိုအပ်ပါတယ်။
+
+ဥပမာ - 
+
+
+useEffect(() => {
+
+        //for abort 
+        let abortController = new AbortController();
+        let signal = abortController.signal;
+
+        setLoading(true);
+        fetch(url, {
+            signal
+        })
+            .then(res => {
+                
+                if (!res.ok) {
+                    throw Error('something went wrong');
+                }
+
+                return res.json();
+            })
+            .then(data => {
+                setData(data);
+                setError(null);
+                setLoading(false);
+            })
+            .catch(e => {
+                setError(e.message);
+            })
+        
+        // cleanup function 
+        return () => {
+            abortController.abort();
+        }
+    }, [url]);
+
+=>useEffect infinite 
+useEffect ရဲ့ dependency မှာ primitive value ကို သုံးရင် အဆင်ပြေပြီး reference value ကို သုံးမယ်ဆိုရင်တော့ infinite loop ဖြစ်နေတတ်ပါတယ်။
+ =primitive value 
+ string
+ number 
+ boolean
+ null 
+ undefined 
+
+ =reference value
+ object 
+ array 
+ function 
+
+ reference value ဖြစ်တဲ့ function ကို ပေးထားတယ်ဆိုရင် useCallback ကို သုံးရင် အဆင်ပြေသွားပြီး 
+
+
+ array object တွေကို သုံးတယ်ဆိုရင် အဲဒီ array or object ကို useState ထဲမှာထည့်ပြီးသုံးလို့ရတယ်။ ဒါပေမယ့် မလိုအပ်ဘဲ setState က ပိုနေတတ်ပါတယ်။ အဲလိုပိုမနေစေချင်ရင် dom တွေကို ရယူတဲ့ useRef ကို လည်းသုံးလို့ရပါတယ်။ useRef ကလည်း reactivity ဖြစ်အောင် လုပ်ပေးပါတယ်။ 
+
+ example - 
+
+  let { data: trips,loading,error } = useFetch(url,{type: "GET"})
+
+ function useFetch(url,_options) {
+
+    let [data, setData] = useState(null);
+    let [loading, setLoading] = useState(false);
+    let [error, setError] = useState(null);
+    // let [option, setOptions] = useState(_options);
+    let option = useRef(_options);
+
+    useEffect(() => {
+        let abortController = new AbortController();
+        let signal = abortController.signal;
+
+        setLoading(true);
+        fetch(url, {
+            signal
+        })
+            .then(res => {
+                
+                if (!res.ok) {
+                    throw Error('something went wrong');
+                }
+
+                return res.json();
+            })
+            .then(data => {
+                setData(data);
+                setError(null);
+                setLoading(false);
+            })
+            .catch(e => {
+                setError(e.message);
+            })
+        
+        // cleanup function 
+        return () => {
+            abortController.abort();
+        }
+    }, [url,option]);
+
+    return { data, loading,error };
+}

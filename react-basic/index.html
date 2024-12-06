@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Basic</title>
+
+    <!-- React Cdn  -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel cdn  -->
+    <!-- react မှာပါတဲ့ JSX တို့ react ရဲ့ syntax တချို့က javascript ရဲ့ default engine ဖြစ်တဲ့ browser မှာ နားမလည်တဲ့အတွက် babel ကို သုံးဖို့လိုအပ်ပါတယ်  -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <div id="main"></div>
+    <!-- this is footer section  -->
+    <footer>Footer</footer>
+
+    <script type="text/babel">
+        const Main = ()=>{
+            let name = "hlaing min than";
+            let number = 20;
+            let className = "change-class";
+
+            let clickHandler = (e)=>{
+                console.log(e);
+            }
+            return (
+                    // this is main section 
+                    <div className={className}>
+                        <h1>{name.toUpperCase()}</h1>
+                        <p>{number}</p>
+                        <p>{new Date().toDateString()}</p>
+                        <button onClick={clickHandler}>click me</button>
+                        
+                    </div>
+                    )
+                    
+        }
+        let rootContainer = document.getElementById('main');
+
+        // create react element 
+        let e = React.createElement;
+
+        // create react root element
+        let root = ReactDOM.createRoot(rootContainer);
+
+        // render the react root
+        root.render(e(Main)); 
+
+        // Note::
+        // Main is JSX component 
+        // React component တွေက html template နဲ့တူတဲ့ JSX ကို return ပြန်ပေး
+        // JSX က HTML code တွေနဲ့ အနီးစပ်ဆုံးတူတဲ့ နည်းပညာတစ်ခု 
+        // JSX မှာ class တွေကိုရေးချင်ရင် class အစား className ဆိုတာကို သုံးရပါတယ် 
+        // JSX code တွေမှာ parent root element တစ်ခုပဲ ပါရပါမယ်
+        // comment ပိတ်ချင်ရင် js မှာလိုပဲ ပိတ်လို့ရတယ် html comment နဲ့ မတူဘူး 
+        // {} template expression မှာ js function တွေ expression တွေ ရေးလို့ရတယ် 
+        // dynamic class တွေရေးချင်ရင် {} ကို သုံးရမယ် "" တွေ '' တွေ မလိုဘူး ဒါကြောင့် attribute တွေ binding လုပ်မယ်ဆိုရင် "" '' တွေ မလို
+        // react မှာ event တွေကို handle လုပ်တဲ့အခါ function reference ကိုပဲပေးရမယ် () မလိုဘူး () ပေးလိုက်မယ် ဆိုရင် react code render လုပ်တာနဲ့ event မဝင်လာသေးခင် auto invoke လုပ်သွားမှာပါ 
+
+        // () မှသာ event တကယ်ဝင်လာမှ function reference ကို သူ့ဘာသူ invoke လုပ်ပြီး run သွားပါလိမ့်မယ် 
+
+
+
+    </script>
+</body>
+</html>

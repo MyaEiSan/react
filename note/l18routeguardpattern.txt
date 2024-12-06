@@ -1,0 +1,8 @@
+=>Route Guard Pattern 
+
+route တွေမှာ ကန့်သတ်ချင်ရင် 
+ကိုယ်ကြိုက်နှစ်သက်သလိုစစ်ပြီး သွားစေချင်တဲ့ route ကို Navigate နဲ့ သွားလိုက်လို့ရတယ်။ ဥပမာ 
+
+let { authReady, user } = useContext(AuthContext);
+const isAuthenticated = Boolean(user);
+element: isAuthenticated ? <Home/> : <Navigate to="/login" />

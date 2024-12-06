@@ -1,0 +1,32 @@
+=>search from Navbar search box 
+Navbar.jsx 
+
+import { useNavigate } from 'react-router-dom'
+
+  let [search, setSearch] = useState('');
+    let navigate = useNavigate();
+
+    let handleSearch = (e) => {
+        navigate('/?search=' + search);
+    }
+
+    <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder='search books...' className='outline-none' />
+    <button onClick={handleSearch} className='text-white bg-primary px-3 py-1 rounded-2xl flex items-center gap-1'>
+        <span className='hidden md:block'>Search</span>
+    </button>
+
+BookList.jsx 
+
+import useFetch from "../hooks/useFetch"
+import { useLocation } from 'react-router-dom';
+
+
+let location = useLocation();
+let params = new URLSearchParams(location.search);
+let search = params.get('search');
+
+
+let { data:books, loading, error } = useFetch(`http://localhost:3000/books${search?`?q=${search}`:''}`);
+
+
+URLSearchParams က js ပါတဲ့ဟာ။

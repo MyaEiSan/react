@@ -1,0 +1,81 @@
+=>Storage in firebase 
+to use storage in firebase use getStorage from "firebase/storage"  in firebase cofig file
+
+
+import {getStorage} from "firebase/storage"
+const app = initializeApp(firebaseConfig);
+
+let storage = getStorage(app);
+export {storage}
+
+
+=>To upload file into firebase storage 
+use uploadBytes and getDownloadURL form firebase storage , both are await 
+
+=>uploadBytes accept two parameter, first = storageRef , second = file 
+
+storageRef ကလည်း firebase storage ကပါတဲ့ ref ကနေရမှာ ref() ကလည်း parameter နှစ်ခု လက်ခံတယ် first parameter က firebase config ကနေ export လုပ်ထားတဲ့ storage , second parameter က path လမ်းကြောင်း 
+
+=>getDownloadURL accept only one parameter that is storageRef
+
+
+
+let handlePhotoChange = (e) => {
+    setFile(e.target.files[0])
+  }
+
+  let handlePreviewImage = (file) => {
+    let reader = new FileReader; 
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      setPreview(reader.result);
+    }
+
+
+  }
+
+  useEffect(() => {
+    if (file) {
+      handlePreviewImage(file)
+    }
+  }, [file])
+  
+  let uploadToFirebase = async (file) => {
+    let uniqueFileName = Date.now().toString() + '_' + file.name;
+    let path = "/covers/" + user.uid + "/" + uniqueFileName
+    let storageRef = ref(storage,path);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef)
+  }
+
+  let submitForm = async (e) => {
+    e.preventDefault();
+    let url = await uploadToFirebase(file);
+
+    let data = {
+      title,
+      description,
+      categories,
+      uid: user.uid,
+      cover: url
+    }
+
+    
+    if (isEdit) {
+      await updateDocument('books', id, data);
+    } else {
+      await addCollection('books', data);
+    }
+
+    navigate('/');
+   
+  }
+
+  
+
+ <input type='file' name='' id="" onChange={handlePhotoChange} />
+{!!preview && <img src={preview} alt="" className='my-3' width={500} height={500} />}
+
+
+

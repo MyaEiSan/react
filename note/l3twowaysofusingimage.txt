@@ -1,0 +1,12 @@
+=>first way - public folder way 
+
+   (1) absolute path 
+   <img src="http://localhost:3000/image.jpg" alt="" />
+   (2) relative path
+   <img src="/image.jpg" alt="" />
+
+=>second way import
+    import Image from "./assets/image.jpg"
+    <img src={Image} alt="" />
+
+Note:: react မှာ js file တစ်ခုအတွက် css file တစ်ခုချင်းစီခွဲထားသင့်ပါတယ်။

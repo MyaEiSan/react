@@ -1,0 +1,108 @@
+=>Install react router 
+npm install react-router-dom
+
+
+Note::ပထမဦးဆုံး run မယ့် index.js file ထဲမှာ အောက်ပါ code တွေပြောင်းထည့်ရမှာဖြစ်ပါတယ်။ router ကတော့ route လမ်းကြောင်းတွေ ရေးပြီး သတ်မှတ်ထားတဲ့ file ကို သိမ်းထားတဲ့နေရာပါ 
+
+=>src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import {RouterProvider} from "react-router-dom";
+
+import router from './router';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <RouterProvider router={router} />
+);
+
+
+=>src/router/index.js
+import {
+    createBrowserRouter,
+  } from "react-router-dom";
+import App from '../App';
+import Home from "../pages/Home";
+import About from "../pages/About";
+import Contact from "../pages/Contact";
+
+  const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <App/>,
+        children: [
+            {
+                path: '',
+                element: <Home/>
+            },
+            {
+                path: '/about',
+                element: <About/>
+            }
+            ,
+            {
+                path: '/contact',
+                element: <Contact/>
+            }
+        ]
+      
+    },
+  ]);
+
+export default router;
+
+=>App.js 
+App.js မှာ dynamically route တွေမှာသတ်မှတ်ထားတဲ့ သက်ဆိုင်ရာ component တွေကို လက်ခံဖို့အတွက် react-router-dom က Outlet ကိုသုံးရမှာဖြစ်ပြီး , route တွေကို သတ်မှတ်ထားတဲ့ link တွေကို နှိပ်တဲ့အခါ reload မဖြစ်အောင် Link or NavLink ကို သုံးရမှာဖြစ်ပါတယ်။ NavLink ရဲ့ Link နဲ့မတူတာက သူက current ရောက်နေတဲ့ element မှာ active ဆိုတဲ့ class လေး ထည့်သွားပေးမှာပဲဖြစ်ပါတယ်။ NavLink တို့ Link တို့မှာ route ကို သတ်မှတ်တဲ့အခါ to ကိုသုံးရပါတယ်။ 
+
+အောက်ပါအတိုင်းခေါ်သုံးရမှာဖြစ်ပါတယ် App.js မှာ 
+
+import { Outlet,Link, NavLink } from 'react-router-dom';
+import './App.css';
+
+function App() {
+  return (
+    <div className='App'>
+      <nav>
+        <h1>My Blogs</h1>
+        <ul>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/about">About</NavLink></li>
+          <li><NavLink to="/contact">Contact</NavLink></li>
+        </ul>
+      </nav>
+      {/* dynamically  */}
+      <Outlet/>
+    </div>
+  );
+}
+
+export default App;
+
+
+=>route parameter in dynamic route 
+route parameter ပေးတဲ့အခါ အောက်ပါအတိုင်း : ကို သုံးရတယ်။ 
+{
+  path: '/blogs/:id',
+  element: <BlogDetail/>
+}
+
+Note::route ရဲ့ parameter ကို ရယူချင်တဲ့အခါ react-router-dom ကပါတဲ့ useParams ကို အောက်ပါအတိုင်းသုံးပြီး ရယူလို့ရတယ်။ 
+import { useParams } from "react-router-dom"
+let params = useParams();
+let url = 'http://localhost:3001/blogs/' + params.id;
+
+=> redirection
+react မှာ route ကို redirect လုပ်ချင်တဲ့အခါ react-router-dom ကပါတဲ့ useNavigate ကို သုံးရမှာဖြစ်ပါတယ်။
+
+import { useNavigate, useParams } from "react-router-dom"
+
+ let navigate = useNavigate();
+
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+        }
+    },[error,navigate])

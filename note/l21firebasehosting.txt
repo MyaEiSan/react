@@ -1,0 +1,21 @@
+=>Deploy Firebase 
+
+Firstly, To deploy firebase , you need to run follow command, that command will create dist folder that have build file 
+bundling tools ကို အသုံးပြုပြီး လိုအပ်တဲ့ file တွေ ထုတ်ပေးသွားမှာဖြစ်ပါတယ်။ 
+
+firebase hosting အတွက် folder ကို ပြောင်းချင်ရင်လည်း firebase.json မှာ ပြောင်းလို့ရပါတယ်။ 
+
+npm run build 
+
+=>To deploy 
+
+firebase deploy 
+
+
+=>Update and Redeploy 
+update တစ်ခုခု လုပ်ပြီးရင် redeploy  လုပ်ချင်ရင်လည်း 
+npm run build 
+firebase deploy 
+ကို သုံးရမှာဖြစ်ပါတယ်။ 
+
+=> အရင် version ကို rollback ပြန်လုပ်ချင်ရင်လည်း Build > Hosting ကနေ rollback လုပ်ချင်တဲ့ version ရဲ့ ဘေးမှာရှိတဲ့ rollback ကိုနှိပ်ပြီးလုပ်ရမှာဖြစ်ပါတယ်။ 

@@ -1,0 +1,62 @@
+=>useEffect 
+fetch method ကို useEffect() ထဲမှာ မဟုတ်ဘဲ အပြင်မှာ ရေးမယ်ဆိုရင်  စစချင်း component render လုပ်တဲ့အချိန်မှာ အဲဒီ method က အလုပ်လုပ်ပြီး  setTrips ပါတဲ့အတွက်  state change တိုင်း component က rerender ပြန်ကျလိုက်ဆိုတော့ fetch ကလည်း render ပြန်ကျတိုင်း လုပ်လိုက်ဆိုတော့ recursive ဖြစ်ပြီး ထပ်ခါထပ်ခါ မရပ်တော့ဘဲ အလုပ်လုပ်နေလို့ performance ကျတာတွေဖြစ်တော့မှာ။ အဲလို မဖြစ်စေချင်လို့ useEffect ကို သုံးဖို့လိုပါတယ်။
+
+ let [trips, setTrips] = useState([]);
+
+useEffect(() => {
+    fetch('http://localhost:3001/trips')
+        .then(res => res.json())
+        .then(data => {
+            setTrips(data);
+        })
+}, []);
+
+Note::useEffect က ကျ တော့ parameter နှစ်ခု လက်ခံတာ first param က callback function, second param က state dependency တွေပေးရတာ arrayနဲ့။  []  ပဲထားထား [] ထဲမှာ state ပဲထည့်ထားထား နှစ်မျိုးလုံးမှာတူတဲ့အချက်က ပထမဦးဆုံး component render ကျတဲ့အချိန်မှာတော့ တစ်ခါတော့ callback ကိုလုပ်ကြမှာပဲ။ [] ဆိုရင်တော့ နောက်ထပ်ထပ်မလုပ်တော့ဘူး။ 
+
+let [trips, setTrips] = useState([]);
+ let [url, setUrl] = useState('http://localhost:3001/trips');
+
+useEffect(() => {
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            setTrips(data);
+        })
+}, [url]);
+
+ return (
+       <div>
+          <h1>Ready to go ?</h1>
+          <button onClick={() => setUrl('http://localhost:3001/trips')}>all</button>
+          <button onClick={()=>setUrl('http://localhost:3001/trips?location=Myanmar')}>Trips in Myanmar</button>
+          <ul>
+              {trips.map(trip => (
+                  <li key={trip.id}>
+                      <h3>{ trip.name}</h3>
+                    <p>price - {trip.price} mmk</p>
+                </li>
+              ))}
+          </ul>
+        </div>
+  )
+
+Note:: state တစ်ခုခုကို useEffect ရဲ့ callback မှာ သုံးထားတယ်ဆိုရင်တော့ [] နဲ့ dependency list မှာ အဲဒီ state ကို dependency အနေနဲ့ အထပ်ပါပုံစံအတိုင်း ထည့်ပေးဖို့လိုကို လိုအပ်ပါတယ်။ ပြီးတော့ callback function ကလည်း အဲဒီ state ချိန်းသွားတိုင်း အလုပ်လုပ်နေမှာပါ။ 
+
+=>useCallback 
+
+useEffect မှာ function ကို dependency အနေနဲ့သုံးတဲ့အခါ အဲဒီ function ကို component render ကျတိုင်း create မလုပ်ဖို့အတွက် အဲဒီ function က useCallback ကို သုံးသင့်တယ်။ 
+
+useCallback က component ပထမဦးဆုံး render ကျတဲ့အချိန်မှာ function တစ်ခုကို cache version အနေနဲ့သိမ်းလိုက်ပါတယ်။ နောက်တစ်ခါ component render ကျတဲ့အချိန်မှာ အဲဒီ function ကို ပြန်တည်ဆောက်မှာမဟုတ်ဘူး cache ထဲကပဲ ယူသုံးနေမှာ။ ဒါပေမယ့် အဲဒီ function ကို useCallback ရဲ့ dependency မှာ ပေးထားတဲ့ state change တဲ့အခါမှာတော့ ပြန်တည်ဆောက်လိမ့်မယ်။ အဲလို ပြန်တည်ဆောက်တဲ့အချိန်မှာ react က အဲဒီ function ပြောင်းသွားတယ်လို့ ယူဆပြီး useEffect ရဲ့ callback ကို အလုပ်လုပ်သွားမှာဖြစ်ပါတယ်။ 
+
+
+let fetchTrips = useCallback(() => {
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                setTrips(data);
+        })
+    }, [url]);
+
+    useEffect(() => {
+        fetchTrips()
+    }, [fetchTrips]);

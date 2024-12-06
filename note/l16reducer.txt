@@ -1,0 +1,63 @@
+=>useReducer 
+
+useReducer က parameter နှစ်ခုလက်ခံတယ် first param က reducer function , naming convention အရ Reducer နဲ့အဆုံးသတ်သင့်ပါတယ်။ 
+reducer function ကိုလည်း component ရဲ့ အပြင်ဘက်မှာ run သင့်ပါတယ်။ component render ကျတိုင်း ပြန်တည်ဆောက်ဖို့ မလိုအပ်လို့ပါ။ 
+second param အနေနဲ့ default state ထည့်ပေးရပါမယ်။ 
+
+useReducer function က return ပြန်ပေးမှာက first အနေနဲ့ reactivity state တစ်ခု ဖြစ်ပြီး , ဒုတိယအနေနဲ့ state ကို update လုပ်ပေးမည့် action လုပ်မယ့် dispatch function ကို return ပြန်ပေးပါတယ်။ 
+
+dispatch function run တဲ့အခါ type နဲ့ payload ပါတဲ့ action တစ်ခု ထည့်ပေးရပါတယ်။ type ကို naming convention အရ capital letter တွေပဲ ပေးသင့်ပါတယ်။ 
+
+dispatch function ကို run ဖို့အတွက် ရေးထားတဲ့ changeTheme ဆိုတဲ့ function ကိုလည်း context api ကနေ global အနေနဲ့အသုံချလို့ရအောင် လုပ်ပေးလိုက်ပါတယ်။ 
+
+changeTheme ဆိုတဲ့ function run တဲ့အခါ dispatch က run တယ်။ dispatch run လို့ရှိရင် ThemeReducer က run တယ်။ ThemeReducer run တဲ့အခါ action ရဲ့ type ပေါ်မူတည်ပြီး ပြောင်းလဲရမည့် state ကို return ပြန်ပေးပါတယ်။ 
+
+အဲလို return ပြန်လာတဲ့ state က useReducer ရဲ့ second param ကို overwrite လုပ်တယ်။ useReducer က return ပြန်ပေးတဲ့ reactivity  state က change သွားတယ်။ component တွေ rerender ကျပြီး theme တွေ change ကုန်တာ ဖြစ်ပါတယ်။ 
+
+src/contexts/ThemeContext.jsx 
+
+// themecontext
+
+import { createContext, useReducer } from "react";
+
+const ThemeContext = createContext();
+
+// themecontextprovider component
+
+let ThemeReducer = (state, action) => {
+    switch (action.type) {
+        case "CHANGE_THEME":
+            return { ...state, theme: action.payload } // object သဘောတရားအရ key တူရင် နောက်ကဟာကိုပဲယူတယ် {theme : 'light',theme : 'dark'}
+        default:
+            return state; //{theme : 'light'}
+    }
+}
+
+const ThemeContextProvider = ({ children }) => {
+    
+    let [state, dispatch] = useReducer(ThemeReducer, {
+        theme: 'light'
+    })
+
+    let changeTheme = () => {
+        // action -> type + payload -> { type, payloadd }
+        dispatch({type: "CHANGE_THEME", payload: 'dark'})
+    }
+
+    return (
+        <ThemeContext.Provider value={{...state,changeTheme}}>
+            {children}
+        </ThemeContext.Provider>
+    )
+}
+
+export { ThemeContext, ThemeContextProvider };
+
+
+Navbar.jsx 
+
+let { theme,changeTheme } = useTheme();
+
+<nav onClick={changeTheme} className={`border border-b-1 ${theme === 'dark' ? 'bg-blue-100': 'bg-yellow-200'}`}>
+    etc...
+</nav>

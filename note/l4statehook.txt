@@ -1,0 +1,44 @@
+import { useState } from 'react';
+
+Note::
+=>useState မသုံးပဲ ပုံမှန် variable ပဲသုံးမယ် ဆိုရင် console မှာတော့ Aung Aung change သွားမယ် ဒါပေမယ့် component က re-render မဖြစ်သွားတဲ့အတွက် <h1></h1>မှာ ပြောင်းလဲမှု ဖြစ်သွားမှာမဟုတ်ဘူး။ ဒါကြောင့် state change တဲ့အခါ component ကို render ကျစေချင်လို့ useState ကို အသုံးပြုဖို့လိုအပ်ပါတယ်။
+
+=>useState သည် asychronous ဖြစ်တဲ့အတွက် 
+အောက်က console မစောင့်ဘဲ လုပ်သွားလို့ console resutl က 
+React ပဲရနေမယ်။setName က component ကို re-render ပြန်လုပ်တဲ့အချိန်မှာ Hello React ကနေ Hello Aung Aung ဖြစ်သွားမှာ 
+
+=>React က virtualDOM နည်းပညာကို အသုံးပြုထားတဲ့အတွက် useState ရဲ့ setterFun ကနေ component ကို state ပြောင်းပြီး re-render မလုပ်ခင်မှာ  state မchangeခင်က component နှင့် change ပြီး component ကိုနှိုင်းယှဥ်ပြီး component တစ်ခုလုံးကို re-render လုပ်လိုက်တာမဟုတ်ဘဲ ပြောင်းတဲ့နေရာလေးကိုပဲ replace လုပ်လိုက်တာဖြစ်တဲ့အတွက် ပိုမြန်သွားတာဖြစ်ပါတယ်။
+
+setState က value မပြောင်းဘူးဆိုရင် re-render မချပေးပါဘူး။ value ပြောင်းသွားမှသာ re-render ဖြစ်သွားမှာပါ component က။ 
+
+// let name = 'React';
+
+let [name,setName] = useState('React'); // [getter,setterFun]
+
+let changeName = () => {
+// name = 'Aung Aung';
+setName('Aung Aung')
+console.log(name); //React 
+}
+
+<h1>Hello {name}</h1>
+<button onClick={changeName}>change name</button>
+
+=>using previous state 
+
+let increment = () => {
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1);
+}
+Note::setCount က Asychronous ဖြစ်တယ် js မစောင့်ပါဘူး ဒါကြောင့် တစ်ပြိုင်နက်  js ကနေ မစောင့်ပဲ setCount ကို run လိုက်တဲ့အချိန်မှာ တစ်ခုပဲ run သလိုဖြစ်ပြီး count က increment ထဲမှာ ၁ ပဲပေါင်းသွားမှာပါ 
+
+let increment = () => {
+    setCount((prev) => (prev + 1))
+    setCount((prev) => (prev+1))
+    setCount((prev) => (prev + 1))
+    setCount((prev) => (prev + 1))
+}
+
+Note::previous state ကို ပြန်ပြီး ရချင်တဲ့အခါ callback function နဲ့ရေးရပါတယ်။ parameter အနေနဲ့ react က previous state ကို dynamically ထည့်ပေးသွားမှာပါ။ အဲဒီ function က asychronous task ကို handle လုပ်ပြီးသားဖြစ်လို့ပါ။

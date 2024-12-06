@@ -1,0 +1,62 @@
+transition ဖြစ်စေချင်တဲ့ content တွေကို SwitchTransiiton CSSTransition တွေအုပ်ပေးရမယ်။
+import React from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import Navbar from '../../components/Navbar'
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import './styles.css'
+
+export default function Layout() {
+
+  const location = useLocation();
+
+  
+  return (
+      <div>
+      <Navbar />
+        <SwitchTransition>
+          <CSSTransition timeout={200} classNames='fade' key={location.pathname}>
+           <div className='max-w-6xl mx-auto p-3'>
+                  <Outlet/>
+            </div>
+          </CSSTransition>
+        </SwitchTransition>
+    </div>
+  )
+}
+
+style.css 
+.fade-enter{
+    opacity: 0;
+ }
+ .fade-exit{
+    opacity: 0;
+ }
+ .fade-enter-active{
+    opacity: 1;
+ }
+ .fade-exit-active{
+    opacity: 0;
+ }
+ .fade-enter-active,
+ .fade-exit-active{
+    transition: opacity 500ms;
+ }
+
+
+
+
+timeout ပေးရမယ် 
+
+prefix animation classname  အတွက် classNames ဆိုတဲ့ prop နဲ့ပေးရမယ်။ ကြိုက်ရာပေးလို့ရပါတယ်။classNames မှာ s ပါတယ်။ 
+
+className တွေကို အတပ်အဖြုတ်လုပ်ဖို့အတွက် key ပေးရမယ်။
+
+page မှာ တစ်ခုနဲ့တစ်ခု change သွားတာကို CSSTransition component က သိဖို့အတွက် key ပေးရမယ်။ key မှာလည်း page တစ်ခု change သွားတဲ့သိတဲဟာပေးရမယ်။ အဲဒီသိတဲ့ဟာကလည်း route ရဲ့ pathname ပဲဖြစ်ပါတယ်။ 
+location.pathname က route လမ်းကြောင်းကို ရမှာ ဥပမာ / , /create 
+
+key change သွားတိုင်း dynamic transition class လေးတွေ အဖြုတ်အတပ်ကို CSSTransition component က လုပ်ပေးနေတာဖြစ်ပါတယ်။ 
+
+အဲဒီ class တွေကိုလည်း ကိုယ်ကြိုက်သလို animation တွေရေးလို့ရပါတယ်။
+
+class အဖြုတ်အတပ်ကိုလည်း SwitchTransiiton CSSTransition တွေက ထိန်းပေးထားတာဖြစ်ပါတယ်။  
+

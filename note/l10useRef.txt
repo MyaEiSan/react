@@ -1,0 +1,10 @@
+=>useRef 
+
+html tag တွေကို dom အနေနဲ့ စွဲထုတ်ပြီး ထိချင်တဲ့အခါ အောက်ပါအတိုင်းသုံးလို့ရပါတယ်။
+
+let title = useRef();
+
+console.log(title.current.value); // current value ကိုလည်း ယူလို့ရတယ်။
+
+<input type="text" ref={title} />
+

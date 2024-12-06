@@ -1,0 +1,83 @@
+=>Two Way Data Binding 
+(1) First Method 
+tow way data binding လုပ်ချင်တဲ့အခါ form input မှာ onChange event နဲ့ ရိုက်ထည့်လိုက်တဲ့ value ကို ပြောင်းနိုင်ပြီး value ကို onChange မှာ သုံးထားတဲ့ state ကို အောက်ပါပုံစံအတိုင်း ထားပေးရမှာဖြစ်ပါတယ်။
+
+export default function Index() {
+    
+    let [title, setTitle] = useState("")
+
+    let resetForm = () => {
+        setTitle('');
+        console.log('updated successfully')
+    }
+
+    let upload_post = (e) => {
+        e.preventDefault();
+        let post = {
+            id: Math.floor(Math.random()*10000),
+            title: title
+
+        }
+
+        resetForm();
+        addPost(post);
+    }
+
+  return (
+        <form className='post-form'>
+          <h1>Create Post</h1>
+          <div className='form-control'>
+              <label htmlFor="">Title</label>
+              <input type="text" onChange={(e)=>setTitle(e.target.value)} value={title} />
+          </div>
+          <button type='button' onClick={resetForm}>reset form</button>
+          <div className='form-control'>
+              <button>Post Now</button>
+          </div>
+        </form>
+  )
+}
+
+(2) Second Method 
+
+export default function Index() {
+    
+    let title = useRef();
+
+    let resetForm = () => {
+        title.current.value = '';
+        console.log('updated successfully')
+    }
+
+    let upload_post = (e) => {
+        e.preventDefault();
+        let post = {
+            id: Math.floor(Math.random()*10000),
+            title:  title.current.value
+
+        }
+
+        resetForm();
+        addPost(post);
+    }
+
+  return (
+        <form className='post-form'>
+          <h1>Create Post</h1>
+          <div className='form-control'>
+              <label htmlFor="">Title</label>
+                <input type="text" ref={title} />
+          </div>
+          <button type='button' onClick={resetForm}>reset form</button>
+          <div className='form-control'>
+              <button>Post Now</button>
+          </div>
+        </form>
+  )
+}
+
+
+Note::99% ကတော့ useState ကိုပဲ အသုံးပြုကြပါတယ်။
+
+
+Note::index.js ထဲက </React.StrictMode> က နောက်ကွယ်မှာ code တွေကို အသေးစိတ် double check လုပ်ပေးပါတယ်။ ဒါကြောင့် useEffect ထဲမှာ code တွေက နှစ်ခါ run မှာဖြစ်ပါတယ်။ api တွေလိုမျိုး data fetch တာတွေဆိုရင် performance ကို ထိစေပါတယ်။ ဒါကြောင့် မကောင်းပါဘူး။ ဖြုတ်လိုက်ရင်တော့ တစ်ခါပဲ run တော့မှာပါ။ 

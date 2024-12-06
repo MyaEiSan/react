@@ -1,0 +1,20 @@
+=>To Write firebase rules 
+first you need to init firebase in your project folder directory 
+
+firebase init 
+
+Note:: not already install firebase tool , you need to install firebase tool showing below, and login 
+
+=>install firebase tool 
+
+npm install -g firebase-tools
+
+firebase login:ci
+
+run below command using  token that you got 
+
+firebase login --token token that you got
+
+=>deploy firestore rule 
+
+firebase deploy --only firestore

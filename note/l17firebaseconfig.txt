@@ -1,0 +1,299 @@
+=>get firebase config 
+
+Project Overview > Project Setting > General > Config 
+
+=>create app instance 
+
+src/firebase/index.js 
+
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from "firebase/firestore";
+//for firebase authentication 
+import { getAuth } from "firebase/auth"
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyAZpJnKmn8MAyXL9yOA35uOw5d1zePlLHQ",
+    authDomain: "library-app-7f44d.firebaseapp.com",
+    projectId: "library-app-7f44d",
+    storageBucket: "library-app-7f44d.appspot.com",
+    messagingSenderId: "937554383286",
+    appId: "1:937554383286:web:5627aeb5cc5818b0b07117",
+    measurementId: "G-DH97PDSYEL"
+};
+  
+const app = initializeApp(firebaseConfig);
+
+let db = getFirestore(app);
+
+//for firebase authentication 
+let auth = getAuth(app);
+
+export {db, auth}
+
+
+Note::In firebase , collection is table , document is row 
+
+
+=>registration in firebase 
+
+to register a user use method below 
+- createUserWithEmailAndPassword(auth, email, password)
+
+src/hooks/useSignup.js 
+
+
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react'
+import { auth } from '../firebase';
+
+export default function useSignup() {
+  
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(null);
+
+    const signUp = async (email, password) => {
+        try {
+            setLoading(true);
+            let res = await createUserWithEmailAndPassword(auth, email, password)
+            setLoading(false);
+            setError('');
+            return res.user;
+        } catch (e) {
+            setLoading(false);
+            setError(e.message);
+        }
+    }
+
+    return {error, loading, signUp}
+}
+
+
+=> signin wit firebasse 
+
+to singin use
+- singInWithEmailAndPassword(auth,email,password)
+
+src/hooks/useSignin.js 
+
+import {  signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react'
+import { auth } from '../firebase';
+
+export default function useSignin() {
+  
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(null);
+
+    const singIn = async (email, password) => {
+        try {
+            setLoading(true);
+            let res = await signInWithEmailAndPassword(auth, email, password)
+            setLoading(false);
+            setError('');
+            return res.user;
+        } catch (e) {
+            setLoading(false);
+            setError(e.message);
+        }
+    }
+
+    return {error, loading, singIn}
+}
+
+
+=> singn out with firebase 
+
+use bleow method 
+- signOut(auth)
+
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import React, { useState } from 'react'
+import { auth } from '../firebase';
+
+export default function useSignout() {
+  
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(null);
+
+    const logout= async () => {
+        try {
+            setLoading(true);
+            let res = await signOut(auth)
+            setError('');
+            setLoading(false);
+            return res.user;
+        } catch (e) {
+            setLoading(false);
+            setError(e.message);
+        }
+    }
+
+    return {error, loading, logout}
+}
+
+
+=> get single document or single row 
+
+-ပထမဦးဆုံးအနေနဲ့ reference တစ်ခု လိုတယ် single document ကို ရယူဖို့ဆိုရင် doc ကို သုံးရမယ် first parameter က config လုပ်ထားတဲ firebase ထဲက db , second parameter က collection(table name), third parameter က ထုတ်ချင်တဲ့ document ရဲ့ id 
+
+-ဒုတိယအနေနဲ့  getDoc(ref) ဆိုပြီး reference ကိုထည့်ပြီး document ကို ထုတ်ရမယ်။ ပြီးရင် .then နဲ့ document ကို ရယူပြီး လိုအပ်သလို အသုံးချလို့ရပါတယ်။ document ရှိမရှိကိုလည်း exists() နဲ့ စစ်လို့ရတယ်။ 
+
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase';
+
+useEffect(() => {
+        setLoading(true);
+        let ref = doc(db, 'books', id);
+
+        getDoc(ref).then(doc => {
+            if (doc.exists()) {
+                let book = { id: doc.id, ...doc.data() };
+                setBook(book);
+                setLoading(false);
+                setError('');
+            } else {
+                setError('no document found');
+                setLoading(false);
+            }
+
+        }); 
+    },[id])
+
+=> to get realtime database feature  with firebase 
+use onSnapshot instead of getDoc 
+
+တခြား user တစ်ယောက်ယောက်က ယခုလက်ရှိမိမိကြည့်နေတဲ့ data ကို update တစ်ခုခု လုပ်လိုက်ရင် မိမိဘက်မှာလည်း ကြည့်နေရင်း refresh မဖြစ်ဘဲ auto ပြောင်းသွားတဲ့ feature ရမှာ။ 
+
+အဲဒါကို သုံးတဲ့အခါ update , delete တွေမှာ ui အတွက် သပ်သပ်ရေးပေးစရာမလိုတော့ပါဘူး 
+
+
+onSnapshot မှာက .then နဲ့မဟုတ်တော့ဘဲ ref ကို first parameter , function ကို second parameter အနေနဲ့ အလုပ်လုပ်မှာပါ။ 
+
+    useEffect(() => {
+        setLoading(true);
+        let ref = doc(db, 'books', id);
+
+        // realtime communication 
+        onSnapshot(ref, doc => {
+            if (doc.exists()) {
+                let book = { id: doc.id, ...doc.data() };
+                setBook(book);
+                setLoading(false);
+                setError('');
+            } else {
+                setError('no document found');
+                setLoading(false);
+            }
+
+        })
+    },[id])
+
+=> get multiple documents or multiple rows 
+
+-ပထမဦးဆုံးအနေနဲ့ reference တစ်ခု လိုတယ် multiple documents ကို ရယူဖို့ဆိုရင် collection ကို သုံးရမယ် first parameter က config လုပ်ထားတဲ firebase ထဲက db , second parameter က collection(table name) 
+
+-ဒုတိယအနေနဲ့  getDocs(ref) ဆိုပြီး reference ကိုထည့်ပြီး documents ကို ထုတ်ရမယ်။ ပြီးရင် .then နဲ့ document တွေ ကို ရယူပြီး လိုအပ်သလို အသုံးချလို့ရပါတယ်။ documents ထဲမှာ data ရှိမရှိကိုလည်း .empty() နဲ့ စစ်လို့ရတယ်။ 
+
+orderBy ထည့်ချင်လည်းထည့်လိုရတယ်။ firebase/firestore ကနေပါတဲ့ query ကို အသုံးပြုရမယ်။ 
+first parameter က reference , second parameter က irebase/firestore ကနေပါတဲ့ orderBy ကိုသုံးရမယ်။ first parameter က စီချင်တဲ့ field name , second parameter က order စီချင်တဲ့ပုံစံ 
+
+import { db } from "../firebase";
+import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
+
+
+useEffect(function () {
+    setLoading(true);
+    let ref = collection(db, 'books');
+
+    let q = query(ref, orderBy('date', 'desc'));
+    // getDocs(q).then(docs => {
+    //   if (docs.empty) {
+    //     setError('no documents found');
+    //     setLoading(false);
+
+    //   } else {
+    //     let books = [];
+    //     docs.forEach(doc => {
+    //       let book = { id: doc.id, ...doc.data() };
+    //       books.push(book)
+    //     })
+    //     setBooks(books);
+    //     setLoading(false);
+    //     setError('');
+    //   }
+     
+    // })
+
+  //  firebase realtime communication 
+    onSnapshot(q, docs => {
+      if (docs.empty) {
+        setError('no documents found');
+        setLoading(false);
+
+      } else {
+        let books = [];
+        docs.forEach(doc => {
+          let book = { id: doc.id, ...doc.data() };
+          books.push(book)
+        })
+        setBooks(books);
+        setLoading(false);
+        setError('');
+      }
+     
+    });
+  }, [])
+
+
+
+=> add(create) and update document  
+
+import { addDoc, collection, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+
+- to create data use below method
+   when create ref to add document, use collection()
+   addDoc(ref,data)
+
+- to update data use below method 
+   when create ref to add document, use doc()
+   updateDoc(ref,data)
+
+let data = {
+      title,
+      description,
+      categories,
+      date: serverTimestamp()
+    }
+
+let submitForm = async (e) => {
+    e.preventDefault();
+    let data = {
+      title,
+      description,
+      categories,
+      date: serverTimestamp()
+    }
+
+    
+    if (isEdit) {
+      let ref = doc(db, 'books', id);
+      await updateDoc(ref,data);
+    } else {
+      let ref = collection(db, 'books');
+      await addDoc(ref, data)
+    }
+
+    navigate('/');
+
+  }
+
+
+=> delete Document 
+to delete document use deleteDoc 
+
+let ref = doc(db, 'books', id);
+// backend book delete 
+await deleteDoc(ref);
+

@@ -1,0 +1,77 @@
+ const Main = ()=>{
+            let name = "hlaing min than";
+            let number = 20;
+            let className = "change-class";
+
+            let clickHandler = (e)=>{
+                console.log(e);
+            }
+            return (
+                    // this is main section 
+                    <div className={className}>
+                        <h1>{name.toUpperCase()}</h1>
+                        <p>{number}</p>
+                        <p>{new Date().toDateString()}</p>
+                        <button onClick={clickHandler}>click me</button>
+                        
+                    </div>
+                    )
+                    
+        }
+        
+let rootContainer = document.getElementById('main');
+
+// create react element 
+let e = React.createElement;
+
+// create react root element
+let root = ReactDOM.createRoot(rootContainer);
+
+// render the react root
+root.render(e(Main)); 
+
+Note::
+
+=>Main is JSX component 
+=>React component တွေက html template နဲ့တူတဲ့ JSX ကို return ပြန်ပေး
+=>JSX က HTML code တွေနဲ့ အနီးစပ်ဆုံးတူတဲ့ နည်းပညာတစ်ခု 
+=>JSX မှာ class တွေကိုရေးချင်ရင် class အစား className ဆိုတာကို သုံးရပါတယ် 
+=>JSX code တွေမှာ parent root element တစ်ခုပဲ ပါရပါမယ်။ အဲလိုမျိုး parent element ပါရမယ်ဆိုတော့ <div></div> သွားအုပ်မယ်ဆိုရင် မလိုအပ်ဘဲ div တစ်ခုက ပိုနေသလိုဖြစ်နေမယ် အဲလိုမဖြစ်စေချင်ရင် <div></div> အစား react fragment လို့ခေါ်တဲ့ <></> ကိုသုံးလို့ရတယ်
+=>comment ပိတ်ချင်ရင် js မှာလိုပဲ ပိတ်လို့ရတယ် html comment နဲ့ မတူဘူး 
+=>{} template expression မှာ js function တွေ expression တွေ ရေးလို့ရတယ် 
+=>dynamic class တွေရေးချင်ရင် {} ကို သုံးရမယ် "" တွေ '' တွေ မလိုဘူး ဒါကြောင့် =>attribute တွေ binding လုပ်မယ်ဆိုရင် "" '' တွေ မလို
+=>react မှာ event တွေကို handle လုပ်တဲ့အခါ function reference ကိုပဲပေးရမယ် () =>မလိုဘူး () ပေးလိုက်မယ် ဆိုရင် react code render လုပ်တာနဲ့ event မဝင်လာသေးခင် auto invoke လုပ်သွားမှာပါ 
+
+=>() မပါမှသာ event တကယ်ဝင်လာမှ function reference ကို သူ့ဘာသူ invoke လုပ်ပြီး run သွားပါလိမ့်မယ်
+
+Note:: event function ထဲကို parameter ထည့်စရာမလိုဘူးဆိုရင် function name ကို reference အနေနဲ့တိုက်ရိုက်ခေါ်လို့ရတယ် ဥပမာ 
+
+(1) 
+  let changeName = () => {
+    setName('Aung Aung');
+  }
+  <button onClick={changeName}>change name</button>
+
+
+Note:: event function ထဲကို parameter ထည့်စရာလိုတယ်ဆိုရင် function name ကို reference အနေနဲ့တိုက်ရိုက်မပေးပဲ function refence တစ်ခုကိုတည်ဆောက်ပြီး functionname ကိုခေါ်ပြီး parameter parse ပေးရမှာဖြစ်ပါတယ်။ ဥပမာ 
+(2)
+  let deletePost = (id) => {
+    setPosts((prevState) => prevState.filter(post => post.id != id));
+  }
+  <button onClick={()=>deletePost(post.id)}>delete</button>
+
+=>Conversion to boolean value from any data type 
+!!ကိုရှေ့မှာထည့်ပေးရမယ် 
+ဥပမာ 
+    {!!posts.length && posts.map((post) => (
+          <li key={post.id}>
+            {post.title}
+            <button onClick={()=>deletePost(post.id)}>delete</button>
+          </li>
+    ))}
+
+    {!posts.length && <p>No Posts Available</p>}
+
+Note:: && က ရှေ့ကဟာပါမှ နောက်ကဟာကိုဆက်လုပ်တာ ဒါကြောင့် conditionally ရေးချင်ရင် အထပ်ပါပုံစံမျိုးရေးရတယ် react မှာ 
+
+

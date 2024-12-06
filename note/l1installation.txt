@@ -1,0 +1,51 @@
+=>Two ways of using react 
+1.cdn link 
+2.installation 
+
+=>1 cdn link 
+
+react မှာပါတဲ့ JSX တို့ react ရဲ့ syntax တချို့က javascript ရဲ့ default engine ဖြစ်တဲ့ browser မှာ နားမလည်တဲ့အတွက် babel cdn link ကိုပါ ထပ်ချိတ်သုံးဖို့လိုအပ်ပါတယ်
+
+
+=>Installation react application 
+npx create-react-app my-app 
+cd my-app
+npm start
+
+=>Installation json server 
+=npm i -g json-server
+create path for json data 
+eg. src/data/db.json  , create json format data 
+=>start json server 
+Note:: json-server မှာရှိတဲ့ command line တွေသိချင်ရင် json-server ဆိုပြီး ရိုက်ချလိုက်လို့ရတယ်။ 
+
+(1) json-server src/data/db.json 
+    (1) အတိုင်း json server ကို start မယ်ဆိုရင် db.json file ထဲကို update တစ်ခုခု လုပ်တာနဲ့ auto လိုက်ပြောင်းမှာမဟုတ်ပါဘူး။ အဲလို ဖြစ်ချင်ရင် နည်းလမ်း (၂) အတိုင်း လုပ်လိုရတယ်။
+(2) json-server -w src/data/db.json or json-server --watch src/data/db.json 
+    (2) အတိုင်း json server ကို start မယ်ဆိုရင်တော့ auto update လုပ်ပေးလိမ့်မယ်။
+
+
+=>Shortcut to run json server 
+in scripts of package.json file
+ "dev": "json-server -w src/data/db.json",
+
+dev is shortcut to run json server , you can use anything 
+
+e.g npm run dev 
+
+=>add custom port in shortcut 
+eg. "dev": "json-server -w src/data/db.json -p=3001",
+
+
+=>Install react router 
+
+npm install react-router-dom
+
+=>Install react transition group 
+
+npm i react-transition-group
+
+
+=>Install moment js 
+
+npm install moment 

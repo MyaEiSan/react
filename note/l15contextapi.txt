@@ -1,0 +1,108 @@
+=>ThemeContext 
+-dark mode , light mode လိုမျိုး theme ​ပြောင်းဖို့အတွက် react ကပါတဲ့ createContext ကို သုံးလို့ရတယ်။  
+
+-theme ကို change နိုင်ဖို့အတွက် ThemeContext သတ်မှတ်ထားတဲ့ jsx ကနေ ThemeContext နဲ့ ThemeContext ရဲ့ theme ပြောင်းချင်တဲ့ အပိုင်းတွေမှာ parent component လိုမျိုး သုံးနိုင်ဖို့အတွက် provider ဆိုပြီး နှစ်မျိုး return ပြန်ပေးရပါတယ်။ 
+
+- provider မှာ value ဆိုတဲ့ prop ကနေ ထားချင်တဲ့ theme ကို object ပုံစံသတ်မှတ်ပေးရပါတယ်။ ပြီးတော့ Provider ကို component ပုံစံ သုံးပြီး theme ပြောင်းချင်တဲ့ application တစ်ခုလုံးသော်လည်းကောင်း တစ်စိတ်တစ်ပိုင်းသော် လည်းကောင်း အုပ်ထားမှာဆိုတော့ သူ့ထဲမှာ child component အနေနဲ့ ဝင်လာနိုင်ဖို့အတွက် children ဆိုတဲ့ prop လည်း သတ်မှတ်ပေးထားရပါတယ်။ 
+
+ဥပမာ - 
+
+src/contexts/ThemeContext.jsx 
+
+// themecontext
+
+import { createContext } from "react";
+
+const ThemeContext = createContext();
+
+// themecontextprovider component 
+const ThemeContextProvider = ({ children })=>{
+    return (
+        <ThemeContext.Provider value={{theme: 'light'}}>
+            {children}
+        </ThemeContext.Provider>
+    )
+}
+
+export { ThemeContext, ThemeContextProvider };
+
+
+=>Using ThemeContext 
+
+theme ကို application တစ်ခုလုံးမှာ သုံးချင်တာဆိုတော့ တစ်ခုလုံးကို အုပ်ထားတဲ့ RouterProvider ကို ThemeContextProvider နဲ့ အုပ်ပေးရမှာဖြစ်ပါတယ်။ ဥပမာ 
+
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import { RouterProvider } from 'react-router-dom'
+import router from './router'
+import { ThemeContextProvider } from './contexts/ThemeContext'
+
+src/main.jsx 
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <ThemeContextProvider>
+        <RouterProvider router={router} />
+    </ThemeContextProvider>
+    
+
+)
+
+
+=>change ui depends on Theme 
+
+Theme အပေါ်မူတည်ပြီး ui change ဖို့ရာအတွက် react ကနေပါတဲ့ useContext ကနေတစ်ဆင့် ThemeContext ကို ရယူပြီး လို့အပ်သလို အသုံးပြုရမျာဖြစ်ပါတယ်။ ဥပမာ - 
+
+src/components/Navbar.jsx 
+
+import React, { useContext } from 'react'
+import { ThemeContext } from '../contexts/ThemeContext';
+
+
+ let { theme } = useContext(ThemeContext)
+
+ return (
+    <nav className={`border border-b-1 ${theme === 'dark' ? 'bg-blue-100': 'bg-yellow-200'}`}>
+    .....etc 
+    </nav>
+ )
+
+ =>custom useTheme 
+
+theme တွေကို အသုံးပြုဖို့အတွက် custom မရေးထားဘူးဆိုရင် သုံးချင်တဲ့ component တိုင်းမှာ  အောက်ပါအတိုင်း နှစ်မျိုးလုံးကို import လုပ်နေရမှာ။ 
+
+import React, { useContext } from 'react'
+import { ThemeContext } from '../contexts/ThemeContext';
+
+
+ let { theme } = useContext(ThemeContext)
+
+ အဲလို အများကြီးမလုပ်ချင်ရင် custom hook လေးတည်ဆောက်ထားလို့ရတယ်။ ဥပမာ 
+
+ src/hooks/useTheme.js 
+
+
+import { useContext } from "react"
+import { ThemeContext } from "../contexts/ThemeContext"
+
+export default function useTheme() {
+    let contexts = useContext(ThemeContext);
+    if (contexts === undefined) {
+        new Error('theme context should be only used in ThemeContextProvider');
+    }
+    return contexts;//{theme: 'dark'}
+}
+
+Note::contexts ကို undefined နဲ့စစ်တာက theme ကို ThemeContextProvider အောက်ကနေမခေါ်ပဲ အပြင်ကနေ ခေါ်သုံးတဲ့အခါမျိုးမှာ undefined ရမှာမိုလို့။ themecontextprovider နဲ့အုပ်ထားမှသာ အောက်ကဟာတွေကို theme ကို သုံးလို့ရမှာ။ 
+
+ပြန်သုံးတဲ့အခါကျ အောက်ပါအတိုင်းအလွယ်တကူသုံးလို့ရသွားမယ်။ 
+
+ဥပမာ 
+
+Navbar.jsx 
+
+import useTheme from '../hooks/useTheme';
+
+let { theme } = useTheme();
+
+

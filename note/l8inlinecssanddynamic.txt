@@ -1,0 +1,111 @@
+=>Inline css 
+react မှာ inline css ရေးတဲ့အခါ string နဲ့ပုံမှန်လိုရေးလို့မရဘူး ။ {} jsx expression နဲ့ရေးပြီး အဲဒီထဲမှာမှ object ပုံစံထပ်ထည့်ရေးပေးရမှာ။ စကားလုံးတစ်လုံးထပ်ပိုရင်လည်း အကြီးစာလုံးနဲ့စပ်ရေးပေးရမယ်။
+ဥပမာ - 
+
+<div className='modal' style={{
+    border: '4px solid',
+    borderColor: 'red'
+    }}>
+    {children}
+</div>
+
+=>dynamic css value 
+component ကနေ prop လက်ခံပြီးလုပ်လို့ရတယ် 
+
+(1)prop ကို true false လက်ခံတယ်ဆိုရင် ဘာမမပေးဘဲ prop name ပဲပေးမယ်ဆိုရင် default က true ဖြစ်နေမှာပါ။
+ဥပမာ 
+<Modal danger>
+    <h1>Zoom class is available now.</h1>
+    <p>feel free to <a href=''>join</a> here</p>
+</Modal>
+
+export default function Modal({children,danger}) {
+    return (
+        createPortal(
+            <div className='modal-component'>
+                <div className='modal-backdrop'>
+                    <div className='modal' style={{
+                        border: '4px solid',
+                        borderColor: danger?'red':'blue'
+                    }}>
+                        {children}
+                    </div>
+                </div>
+            </div>
+        ,document.getElementById('modal'))
+      
+  )
+}
+
+(2) value ပေးရင် ပေးတဲ့အတိုင်းအလုပ်လုပ်သွားမှာဖြစ်ပါတယ်။ 
+ဥပမာ 
+<Modal danger={true}>
+    <h1>Zoom class is available now.</h1>
+    <p>feel free to <a href=''>join</a> here</p>
+</Modal>
+
+  
+export default function Modal({children,danger}) {
+    return (
+        createPortal(
+            <div className='modal-component'>
+                <div className='modal-backdrop'>
+                    <div className='modal' style={{
+                        border: '4px solid',
+                        borderColor: danger?'red':'blue'
+                    }}>
+                        {children}
+                    </div>
+                </div>
+            </div>
+        ,document.getElementById('modal'))
+      
+  )
+}
+
+
+(3) ဘာ prop မမပေးဘူးဆိုရင်လည်း component ဘက်မှာ default value သတ်မှတ်နိုင်ပါတယ်။ 
+  ဥပမာ
+  <Modal>
+    <h1>Zoom class is available now.</h1>
+    <p>feel free to <a href=''>join</a> here</p>
+  </Modal>
+
+
+  
+export default function Modal({children,danger = false}) {
+    return (
+        createPortal(
+            <div className='modal-component'>
+                <div className='modal-backdrop'>
+                    <div className='modal' style={{
+                        border: '4px solid',
+                        borderColor: danger?'red':'blue'
+                    }}>
+                        {children}
+                    </div>
+                </div>
+            </div>
+        ,document.getElementById('modal'))
+      
+  )
+}
+
+
+=>Dynamic class name 
+
+variable name တစ်ခုခုနဲ့ dynamic ဖြစ်အောင်လုပ်လို့ရတယ်။ ရေးတဲ့အခါ {} နဲ့ရေးရပြီး `` ကို အသုံးပြုပြီး ရေးရမှာပါ။
+
+let className = danger ? 'border-red' : "border-blue";
+
+<div className={`modal ${className}`}>
+    {children}
+</div>
+
+.modal-component .border-red {
+    border: 4px solid red;
+}
+
+.modal-component .border-blue {
+    border: 4px solid blue;
+}

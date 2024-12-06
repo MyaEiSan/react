@@ -1,0 +1,19 @@
+=>Portal 
+component ကို ပုံမှန် အတိုင်း root element အောက်မှာမပေါ်စေချင်ဘူးဆိုရင် react-dom မှာပါတဲ့ createPortal ကို သုံးလို့ရတယ်။
+ဥပမာ 
+import { createPortal } from 'react-dom'
+
+export default function Modal({children}) {
+    return (
+        createPortal(
+            <div className='modal-backdrop'>
+                <div className='modal'>
+                    {children}
+                </div>
+            </div>
+        ,document.getElementById('modal'))
+      
+  )
+}
+
+Note::createPortal ကိုသုံးလိုက်မယ်ဆိုရင် Modal component က id modal ဆိုပြီး သတ်မှတ်ထားတဲ့ area ထဲမှာသွားပြီးပေါ်မှာဖြစ်ပါတယ်။
